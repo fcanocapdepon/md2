@@ -259,7 +259,7 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
 
       switch (event.keyCode) {
         case TAB:
-        case ESCAPE: this._onBlur(); break;
+        case ESCAPE: this._onBlur(event); break;
       }
       let displayDate = this.displayDate;
       if (this._isYearsVisible) {
@@ -356,12 +356,36 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
     }
   }
 
-  @HostListener('blur')
-  _onBlur() {
-    this._isDatepickerVisible = false;
-    this._isYearsVisible = false;
-    this._isCalendarVisible = this.type !== 'time' ? true : false;
-    this._isHoursVisible = true;
+  @HostListener('blur', ['$event'])
+  _onBlur(event: any) {    
+    if (event === undefined) {
+      this._isDatepickerVisible = false;
+      this._isCalendarVisible = this.type !== 'time' ? true : false;
+      this._isYearsVisible = false;
+      this._isHoursVisible = true;
+    } else {
+      switch (this.type) {
+        case "date":
+         if (!document.activeElement.className.includes("md2-datepicker")
+            && !document.activeElement.className.includes("md2-calendar")) {
+            this._isDatepickerVisible = false;
+            this._isCalendarVisible = true;
+            this._isYearsVisible = false;
+            this._isHoursVisible = true;
+          }
+          break;
+        case "datetime":
+          if (!document.activeElement.className.includes("md2-clock-hour")
+            && !document.activeElement.className.includes("md2-datepicker")
+            && !document.activeElement.className.includes("md2-calendar")) {
+            this._isDatepickerVisible = false;
+            this._isCalendarVisible = false;
+            this._isYearsVisible = false;
+            this._isHoursVisible = true;
+          }
+          break;
+      }
+    }
     this._onTouched();
   }
   /**
@@ -450,7 +474,7 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
       this._resetClock();
     } else {
       this.value = this.displayDate;
-      this._onBlur();
+      this._onBlur(undefined);
     }
   }
 
@@ -480,7 +504,7 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
   private setDate(date: Date) {
     if (this.type === 'date') {
       this.value = date;
-      this._onBlur();
+      this._onBlur(undefined);
     } else {
       this._selectedDate = date;
       this.displayDate = date;
@@ -658,7 +682,7 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
       date.getDate(), date.getHours(), minute);
     this._selectedDate = this.displayDate;
     this.value = this._selectedDate;
-    this._onBlur();
+    this._onBlur(undefined);
   }
 
   // private onMouseDownClock(event: MouseEvent) {

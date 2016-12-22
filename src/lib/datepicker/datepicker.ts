@@ -366,7 +366,8 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
     } else {
       switch (this.type) {
         case "date":
-         if (!document.activeElement.className.includes("md2-datepicker")
+         if (document.activeElement.className.includes !== undefined
+            && !document.activeElement.className.includes("md2-datepicker")
             && !document.activeElement.className.includes("md2-calendar")) {
             this._isDatepickerVisible = false;
             this._isCalendarVisible = true;
@@ -375,7 +376,8 @@ export class Md2Datepicker implements AfterContentInit, ControlValueAccessor {
           }
           break;
         case "datetime":
-          if (!document.activeElement.className.includes("md2-clock-hour")
+          if (document.activeElement.className.includes !== undefined
+            && !document.activeElement.className.includes("md2-clock-hour")
             && !document.activeElement.className.includes("md2-datepicker")
             && !document.activeElement.className.includes("md2-calendar")) {
             this._isDatepickerVisible = false;
